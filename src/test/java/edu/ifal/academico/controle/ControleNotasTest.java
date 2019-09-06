@@ -5,18 +5,24 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
+import edu.ifal.academico.construidor.CriadorDeEstudante;
+import edu.ifal.academico.modelo.Endereco;
 import edu.ifal.academico.modelo.Estudante;
 
 public class ControleNotasTest {
 	
 	private ControleNotas controleNotas;
 	private Estudante estudante;
-	
+	private CriadorDeEstudante criadorDeEstudante;
+	private Endereco endereco;
 	
 	@Before
 	public void inicializacao() {
 		controleNotas = new ControleNotas();
-		estudante = new Estudante();
+		criadorDeEstudante = new CriadorDeEstudante();
+		endereco = new Endereco();
+		estudante = criadorDeEstudante.nome("Clara")
+				.mora(endereco).constroi();
 	}
 	
 	@Test
@@ -92,6 +98,28 @@ public class ControleNotasTest {
 		estudante.setMedia(6);
 		
 		String situacaoEsperada = "Aprovado";
+		String situacaoObtida = controleNotas.getSituacao(estudante);
+		
+		assertEquals(situacaoEsperada, situacaoObtida);
+	}
+	
+	@Test
+	public void deveAprovarComMediaMaiorQueSeis() {
+		
+		estudante.setMedia(7);
+		
+		String situacaoEsperada = "Aprovado";
+		String situacaoObtida = controleNotas.getSituacao(estudante);
+		
+		assertEquals(situacaoEsperada, situacaoObtida);
+	}
+	
+	@Test
+	public void deveIrParaARecuperacaoFinalComMediaQuatro() {
+		
+		estudante.setMedia(4);
+		
+		String situacaoEsperada = "Recuperação Final";
 		String situacaoObtida = controleNotas.getSituacao(estudante);
 		
 		assertEquals(situacaoEsperada, situacaoObtida);
